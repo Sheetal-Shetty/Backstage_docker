@@ -19,7 +19,7 @@ spec:
           type: string
           description: Enter the github URL where your code exists
           ui:autofocus: true
-
+          
 # parameters:
 #   - title: Fill in project details
 #     required:
@@ -38,7 +38,7 @@ spec:
       name: Clone Repository
       action: git:clone
       input:
-        url: ${{ parameters.repoUrl }}
+        url: ${{ parameters.Github_URL }}
 
     - id: build_docker
       name: Build Docker Image
