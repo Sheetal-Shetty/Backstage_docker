@@ -1,0 +1,34 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: docker-deploy-from-github
+  title: Deploy Docker from GitHub Repo
+  description: Create and deploy a Docker container from a GitHub repository URL.
+spec:
+  owner: your-team
+  parameters:
+    - title: GitHub Repository URL
+      type: string
+      name: repoUrl
+  steps:
+    - id: clone
+      name: Clone Repository
+      action: github:clone
+      input:
+        url: ${{ parameters.repoUrl }}
+        # optionally, add checkout/branch details
+
+    - id: build_docker
+      name: Build Docker Image
+      action: shell:run
+      input:
+        workingDirectory: ./repo  # or wherever repo is cloned
+        script: |
+          docker build -t my-image:latest .
+
+    - id: deploy_docker
+      name: Deploy Docker Container
+      action: shell:run
+      input:
+        script: |
+          docker run -d -p 8080:80 my-image:latest
