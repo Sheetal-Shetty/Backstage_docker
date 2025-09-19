@@ -34,11 +34,12 @@ spec:
 #         ui:autofocus: true
           
   steps:
-    - id: clone
-      name: Clone Repository
-      action: git:clone
+    - id: fetch-template
+      name: Fetch template files
+      action: fetch:template
       input:
         url: ${{ parameters.Github_URL }}
+        targetPath: .
 
     - id: build_docker
       name: Build Docker Image
