@@ -5,7 +5,8 @@ metadata:
   title: Deploy Docker from GitHub Repo
   description: Create and deploy a Docker container from a GitHub repository URL.
 spec:
-  owner: your-team
+  owner: user:guest
+  type: service
   parameters:
     - title: GitHub Repository URL
       type: string
@@ -16,13 +17,12 @@ spec:
       action: github:clone
       input:
         url: ${{ parameters.repoUrl }}
-        # optionally, add checkout/branch details
 
     - id: build_docker
       name: Build Docker Image
       action: shell:run
       input:
-        workingDirectory: ./repo  # or wherever repo is cloned
+        workingDirectory: ${{ steps.clone.output.path }}
         script: |
           docker build -t my-image:latest .
 
@@ -30,5 +30,6 @@ spec:
       name: Deploy Docker Container
       action: shell:run
       input:
+        workingDirectory: ${{ steps.clone.output.path }}
         script: |
           docker run -d -p 8080:80 my-image:latest
