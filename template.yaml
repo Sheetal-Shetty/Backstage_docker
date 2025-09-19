@@ -7,10 +7,32 @@ metadata:
 spec:
   owner: user:guest
   type: service
+
+  
   parameters:
     - title: GitHub Repository URL
-      type: string
-      name: repoUrl
+      required: 
+        - Github_URL
+      properties:
+        Github_URL:
+          title: Enter you Github URL
+          type: string
+          description: Enter the github URL where your code exists
+          ui:autofocus: true
+
+# parameters:
+#   - title: Fill in project details
+#     required:
+#       - name
+#       - description
+#       - owner
+#     properties:
+#       name:
+#         title: Project Name
+#         type: string
+#         description: What’s the name of your project?
+#         ui:autofocus: true
+          
   steps:
     - id: clone
       name: Clone Repository
