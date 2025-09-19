@@ -36,7 +36,7 @@ spec:
   steps:
     - id: clone
       name: Clone Repository
-      action: github:clone
+      action: git:clone
       input:
         url: ${{ parameters.repoUrl }}
 
