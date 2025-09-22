@@ -21,13 +21,13 @@ spec:
           ui:autofocus: true
 
     - title: Container Settings
-    required:
-      - Port
-    properties:
-      Port:
-        title: Host Port
-        type: string
-        description: Enter the port number to expose (e.g., 8080)    
+      required:
+        - Port
+      properties:
+        Port:
+          title: Host Port
+          type: string
+          description: Enter the port number to expose (e.g., 8080)    
           
 # parameters:
 #   - title: Fill in project details
