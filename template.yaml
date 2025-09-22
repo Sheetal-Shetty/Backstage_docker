@@ -100,5 +100,5 @@ spec:
   output:
     links:
       - title: "Open Website"
-        url: "http://localhost:${{ parameters.Port }}"
+        url: "http://localhost:89"
         icon: "website"
