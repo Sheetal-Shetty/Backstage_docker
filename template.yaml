@@ -64,7 +64,7 @@ spec:
       input:
         cwd: ${{ steps.clone.output.path }}
         command: docker
-        args:  ["run", "-d", "-p", "8080:80", "my-image:latest"]
+        args: ["run", "-d", "-p", "8080:80", "my-image:latest"]
 
     # - id: run-echo
     #   name: Echo Test
