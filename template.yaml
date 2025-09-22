@@ -50,7 +50,7 @@ spec:
     #       docker build -t my-image:latest .
 
     - id: build_docker
-      name: Build Docker Image
+      name: Build Docker Image_chatgptnewcode
       action: shell:run
       input:
         cwd: ${{ steps.clone.output.path }}
