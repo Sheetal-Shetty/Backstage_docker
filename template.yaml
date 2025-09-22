@@ -59,7 +59,7 @@ spec:
             
 
     - id: deploy_docker
-      name: Deploy Docker Container
+      name: Deploy Docker Container2
       action: shell:run
       input:
         cwd: ${{ steps.clone.output.path }}
