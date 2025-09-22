@@ -23,11 +23,17 @@ spec:
     - title: Container Settings
       required:
         - Port
+        - Dockerfile_Path
       properties:
         Port:
           title: Host Port
           type: string
-          description: Enter the port number to expose (e.g., 8080)    
+          description: Enter the port number to expose (e.g., 8080)
+        Dockerfile_Path:
+          title: Path to Dockerfile
+          type: string
+          description: Relative path to Dockerfile (e.g., `Dockerfile` or `docker/Dockerfile`)
+          default: "Dockerfile"   
           
 # parameters:
 #   - title: Fill in project details
@@ -64,7 +70,7 @@ spec:
       input:
         cwd: ${{ steps.clone.output.path }}
         command: docker 
-        args: ["build", "-t", "my-image:latest", "."]
+        args: ["build", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest", "."]
 
 
     - id: cleanup
