@@ -1,1 +1,1 @@
-# using this to deploy github files in docker
+# Using this to deploy github files in docker
