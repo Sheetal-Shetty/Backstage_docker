@@ -51,7 +51,7 @@ spec:
   steps:
     - id: fetch-template
       name: Fetch template files
-      action: fetch:template
+      action: fetch:plain
       input:
         url: ${{ parameters.Github_URL }}
         targetPath: .
@@ -68,7 +68,7 @@ spec:
       name: Build Docker Image
       action: shell:run
       input:
-        cwd: ${{ steps.clone.output.path }}
+        cwd: ${{ steps.fetch-template.output.path }}
         command: docker 
         args: ["build", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest", "."]
 
@@ -85,7 +85,7 @@ spec:
       name: Deploy Docker Container
       action: shell:run
       input:
-        cwd: ${{ steps.clone.output.path }}
+        cwd: ${{ steps.fetch-template.output.path }}
         command: docker
         args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
 
