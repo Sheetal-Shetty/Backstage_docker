@@ -89,9 +89,16 @@ spec:
         command: docker
         args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
 
+        
+
     # - id: run-echo
     #   name: Echo Test
     #   action: shell:run
     #   input:
     #     command: echo
     #     args: ["Hello Backstage!"]
+  output:
+    links:
+      - title: "Open Website"
+        url: "http://localhost:${{ parameters.Port }}"
+        icon: "website"
