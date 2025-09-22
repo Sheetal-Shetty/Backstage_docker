@@ -46,7 +46,7 @@ spec:
       action: shell:run
       input:
         workingDirectory: ${{ steps.clone.output.path }}
-        script: |
+        command: |
           docker build -t my-image:latest .
 
     # - id: deploy_docker
