@@ -70,8 +70,7 @@ spec:
       input:
         cwd: ${{ steps.fetch-template.output.path }}
         command: docker 
-        args: ["build", "-f", "${{ parameters.Dockerfile_Path }}", "--progress=plain", "--no-cache", "-t", "my-image:latest", "build/"]
-        log: true
+        args: ["build", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest", "."]
 
 
     - id: cleanup
