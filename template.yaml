@@ -40,22 +40,22 @@ spec:
       input:
         url: ${{ parameters.Github_URL }}
         targetPath: .
+    #Previous code throug this template will appear but it will not execute
+    # - id: build_docker
+    #   name: Build Docker Image
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     command: |
+    #       docker build -t my-image:latest .
 
     - id: build_docker
       name: Build Docker Image
       action: shell:run
       input:
-        workingDirectory: ${{ steps.clone.output.path }}
-        command: |
-          docker build -t my-image:latest .
-
-    # - id: build_docker
-    #   name: Build Docker Image
-    #   action: shell:run
-    #   input:
-    #     cwd: ${{ steps.clone.output.path }}
-    #     command: docker 
-    #     args: ["build", "-t", "my-image:latest", "."]
+        cwd: ${{ steps.clone.output.path }}
+        command: docker 
+        args: ["build", "-t", "my-image:latest", "."]
             
 
     # - id: deploy_docker
