@@ -41,18 +41,25 @@ spec:
         url: ${{ parameters.Github_URL }}
         targetPath: .
 
-    - id: build_docker
-      name: Build Docker Image
-      action: shell:run
-      input:
-        workingDirectory: ${{ steps.clone.output.path }}
-        script: |
-          docker build -t my-image:latest .
+    # - id: build_docker
+    #   name: Build Docker Image
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     script: |
+    #       docker build -t my-image:latest .
 
-    - id: deploy_docker
-      name: Deploy Docker Container
+    # - id: deploy_docker
+    #   name: Deploy Docker Container
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     script: |
+    #       docker run -d -p 8080:80 my-image:latest
+
+    - id: run-echo
+      name: Echo Test
       action: shell:run
       input:
-        workingDirectory: ${{ steps.clone.output.path }}
-        script: |
-          docker run -d -p 8080:80 my-image:latest
+        command: echo
+        args: ["Hello Backstage!"]
