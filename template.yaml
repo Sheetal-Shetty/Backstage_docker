@@ -71,6 +71,7 @@ spec:
         cwd: ${{ steps.fetch-template.output.path }}
         command: docker 
         args: ["build", "-f", "${{ parameters.Dockerfile_Path }}", "--progress=plain", "--no-cache", "-t", "my-image:latest", "."]
+        log: true
 
 
     - id: cleanup
