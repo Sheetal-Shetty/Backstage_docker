@@ -41,13 +41,21 @@ spec:
         url: ${{ parameters.Github_URL }}
         targetPath: .
 
-    - id: build_docker
-      name: Build Docker Image
-      action: shell:run
-      input:
-        workingDirectory: ${{ steps.clone.output.path }}
-        command: |
-          docker build -t my-image:latest .
+    # - id: build_docker
+    #   name: Build Docker Image
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     command: |
+    #       docker build -t my-image:latest .
+
+     - id: build_docker
+        name: Build Docker Image
+        action: shell:run
+        input:
+          cwd: ${{ steps.clone.output.path }}
+          command: docker build -t my-image:latest .
+            
 
     # - id: deploy_docker
     #   name: Deploy Docker Container
