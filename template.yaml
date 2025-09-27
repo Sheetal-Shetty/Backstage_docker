@@ -22,7 +22,7 @@ spec:
             - github pages
             - kubernetes
             - baremetal
-          ui:widget: dropdown
+          #ui:widget: dropdown
           #default: docker
           
     - title: GitHub Repository URL
