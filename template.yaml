@@ -65,6 +65,7 @@ spec:
           
   steps:
     - id: fetch-template
+      if: ${{ parameters.deploy_method == 'docker' }}
       name: Fetch template files
       action: fetch:plain
       input:
@@ -80,6 +81,7 @@ spec:
     #       docker build -t my-image:latest .
 
     - id: build_docker
+      if: ${{ parameters.deploy_method == 'docker' }}
       name: Build Docker Image
       action: shell:run
       input:
@@ -89,6 +91,7 @@ spec:
 
 
     - id: cleanup
+      if: ${{ parameters.deploy_method == 'docker' }}
       name: Remove old container if exists
       action: shell:run
       input:
@@ -97,6 +100,7 @@ spec:
                 
 
     - id: deploy_docker
+      if: ${{ parameters.deploy_method == 'docker' }}
       name: Deploy Docker Container
       action: shell:run
       input:
