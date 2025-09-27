@@ -10,6 +10,21 @@ spec:
 
   
   parameters:
+    - title: Deployment Method
+      required:
+        - deploy_method
+      properties:
+        deploy_method:
+          title: How do you want to deploy your app?
+          type: string
+          enum:
+            - docker
+            - github pages
+            - kubernetes
+            - baremetal
+          ui:widget: dropdown
+          #default: docker
+          
     - title: GitHub Repository URL
       required: 
         - Github_URL
