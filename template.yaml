@@ -163,13 +163,19 @@ spec:
     #   input:
     #     command: echo
     #     args: ["Hello Backstage!"]
+  # output:
+  #   links:
+  #     - title: "Open Website"
+  #       url: "http://localhost:89"
+  #       icon: "website"
+
+
   output:
     links:
-      - title: "Open Website"
-        url: "http://localhost:89"
+      - title: "View on GitHub Pages"
+        if: "${{ parameters.deploy_method == 'github pages' }}"
+        url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') }}.github.io/"
         icon: "website"
-
-
 
 # apiVersion: scaffolder.backstage.io/v1beta3
 # kind: Template
