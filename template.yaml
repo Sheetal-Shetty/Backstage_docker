@@ -2,233 +2,118 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: docker-deploy-from-github
-  title: Deploy App from GitHub Repo
-  description: Create and deploy your app using Docker or GitHub Pages.
+  title: Deploy Docker from GitHub Repo
+  description: Create and deploy a Docker container from a GitHub repository URL.
 spec:
   owner: user:guest
   type: service
 
+  
   parameters:
     - title: Deployment Method
       required:
         - deploy_method
       properties:
         deploy_method:
-          title: Choose Deployment Method
+          title: How do you want to deploy your app?
           type: string
           enum:
             - docker
             - github pages
-          description: Select how you want to deploy your application
-
+            - kubernetes
+            - baremetal
+          #ui:widget: dropdown
+          #default: docker
+          
     - title: GitHub Repository URL
       required: 
         - Github_URL
       properties:
         Github_URL:
-          title: Enter your GitHub Repository URL
+          title: Enter you Github URL
           type: string
-          description: Example: https://github.com/user/repo
+          description: Enter the github URL where your code exists
+          ui:autofocus: true
 
     - title: Container Settings
+      required:
+        - Port
+        - Dockerfile_Path
       properties:
         Port:
           title: Host Port
           type: string
-          description: Enter port number for container (e.g., 8080)
-          default: "8080"
+          description: Enter the port number to expose (e.g., 8080)
         Dockerfile_Path:
           title: Path to Dockerfile
           type: string
-          description: Relative path to Dockerfile (e.g., Dockerfile or docker/Dockerfile)
-          default: "Dockerfile"
-
+          description: Relative path to Dockerfile (e.g., `Dockerfile` or `docker/Dockerfile`)
+          default: "Dockerfile"   
+          
+# parameters:
+#   - title: Fill in project details
+#     required:
+#       - name
+#       - description
+#       - owner
+#     properties:
+#       name:
+#         title: Project Name
+#         type: string
+#         description: What’s the name of your project?
+#         ui:autofocus: true
+          
   steps:
     - id: fetch-template
-      name: Fetch repository content
+      name: Fetch template files
       action: fetch:plain
       input:
         url: ${{ parameters.Github_URL }}
         targetPath: .
+    #Previous code throug this template will appear but it will not execute
+    # - id: build_docker
+    #   name: Build Docker Image
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     command: |
+    #       docker build -t my-image:latest .
 
-    # -------------------------------
-    # 🐳 Docker Deployment Path
-    # -------------------------------
     - id: build_docker
       name: Build Docker Image
-      if: ${{ parameters.deploy_method == 'docker' }}
       action: shell:run
       input:
         cwd: ${{ steps.fetch-template.output.path }}
-        command: docker
+        command: docker 
         args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
 
+
     - id: cleanup
-      name: Remove existing container (if any)
-      if: ${{ parameters.deploy_method == 'docker' }}
+      name: Remove old container if exists
       action: shell:run
       input:
         command: docker
         args: ["rm", "-f", "Cafe-container"]
+                
 
     - id: deploy_docker
-      name: Run Docker Container
-      if: ${{ parameters.deploy_method == 'docker' }}
+      name: Deploy Docker Container
       action: shell:run
       input:
         cwd: ${{ steps.fetch-template.output.path }}
         command: docker
         args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
 
-    # -------------------------------
-    # 🌐 GitHub Pages Deployment Path
-    # -------------------------------
-    - id: deploy_github_pages
-      name: Deploy to GitHub Pages
-      if: ${{ parameters.deploy_method == 'github pages' }}
-      action: shell:run
-      input:
-        cwd: ${{ steps.fetch-template.output.path }}
-        command: bash
-        args:
-          - -c
-          - |
-            git config user.email "actions@backstage.local"
-            git config user.name "Backstage Bot"
-            git checkout --orphan gh-pages
-            git rm -rf .
-            cp -r * .
-            git add .
-            git commit -m "Deploy to GitHub Pages from Backstage"
-            git push origin gh-pages --force
-
-  output:
-    links:
-      - title: "Open Docker Website"
-        if: ${{ parameters.deploy_method == 'docker' }}
-        url: "http://localhost:89"
-        icon: "website"
-      - title: "View GitHub Pages Site"
-        if: ${{ parameters.deploy_method == 'github pages' }}
-        url: "${{ parameters.Github_URL }}/tree/gh-pages"
-        icon: "globe"
-
-# apiVersion: scaffolder.backstage.io/v1beta3
-# kind: Template
-# metadata:
-#   name: docker-deploy-from-github
-#   title: Deploy Docker from GitHub Repo
-#   description: Create and deploy a Docker container from a GitHub repository URL.
-# spec:
-#   owner: user:guest
-#   type: service
-
-  
-#   parameters:
-#     - title: Deployment Method
-#       required:
-#         - deploy_method
-#       properties:
-#         deploy_method:
-#           title: How do you want to deploy your app?
-#           type: string
-#           enum:
-#             - docker
-#             - github pages
-#             - kubernetes
-#             - baremetal
-#           #ui:widget: dropdown
-#           #default: docker
-          
-#     - title: GitHub Repository URL
-#       required: 
-#         - Github_URL
-#       properties:
-#         Github_URL:
-#           title: Enter you Github URL
-#           type: string
-#           description: Enter the github URL where your code exists
-#           ui:autofocus: true
-
-#     - title: Container Settings
-#       required:
-#         - Port
-#         - Dockerfile_Path
-#       properties:
-#         Port:
-#           title: Host Port
-#           type: string
-#           description: Enter the port number to expose (e.g., 8080)
-#         Dockerfile_Path:
-#           title: Path to Dockerfile
-#           type: string
-#           description: Relative path to Dockerfile (e.g., `Dockerfile` or `docker/Dockerfile`)
-#           default: "Dockerfile"   
-          
-# # parameters:
-# #   - title: Fill in project details
-# #     required:
-# #       - name
-# #       - description
-# #       - owner
-# #     properties:
-# #       name:
-# #         title: Project Name
-# #         type: string
-# #         description: What’s the name of your project?
-# #         ui:autofocus: true
-          
-#   steps:
-#     - id: fetch-template
-#       name: Fetch template files
-#       action: fetch:plain
-#       input:
-#         url: ${{ parameters.Github_URL }}
-#         targetPath: .
-#     #Previous code throug this template will appear but it will not execute
-#     # - id: build_docker
-#     #   name: Build Docker Image
-#     #   action: shell:run
-#     #   input:
-#     #     workingDirectory: ${{ steps.clone.output.path }}
-#     #     command: |
-#     #       docker build -t my-image:latest .
-
-#     - id: build_docker
-#       name: Build Docker Image
-#       action: shell:run
-#       input:
-#         cwd: ${{ steps.fetch-template.output.path }}
-#         command: docker 
-#         args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
-
-
-#     - id: cleanup
-#       name: Remove old container if exists
-#       action: shell:run
-#       input:
-#         command: docker
-#         args: ["rm", "-f", "Cafe-container"]
-                
-
-#     - id: deploy_docker
-#       name: Deploy Docker Container
-#       action: shell:run
-#       input:
-#         cwd: ${{ steps.fetch-template.output.path }}
-#         command: docker
-#         args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
-
         
 
-#     # - id: run-echo
-#     #   name: Echo Test
-#     #   action: shell:run
-#     #   input:
-#     #     command: echo
-#     #     args: ["Hello Backstage!"]
-#   output:
-#     links:
-#       - title: "Open Website"
-#         url: "http://localhost:89"
-#         icon: "website"
+    # - id: run-echo
+    #   name: Echo Test
+    #   action: shell:run
+    #   input:
+    #     command: echo
+    #     args: ["Hello Backstage!"]
+  output:
+    links:
+      - title: "Open Website"
+        url: "http://localhost:89"
+        icon: "website"
