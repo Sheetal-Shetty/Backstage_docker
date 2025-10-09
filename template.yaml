@@ -174,7 +174,7 @@ spec:
     links:
       - title: "View on GitHub Pages"
         if: "${{ parameters.deploy_method == 'github pages' }}"
-        url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') }}.github.io/"
+        url: "https://sheetal-shetty.github.io/Cafe-Static/"
         icon: "website"
 
 # apiVersion: scaffolder.backstage.io/v1beta3
