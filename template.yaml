@@ -107,7 +107,7 @@ spec:
             fi
 
             echo "🚀 Deploying to GitHub Pages..."
-            npx gh-pages -d build -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
+            npx gh-pages -d . -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
     # - id: deploy_github_pages
     #   name: Deploy to GitHub Pages
     #   if: "${{ parameters.deploy_method == 'github pages' }}"
