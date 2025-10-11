@@ -42,6 +42,7 @@ spec:
           ui:autofocus: true
 
     - title: Container Settings
+      if: "${{ parameters.deploy_method == 'docker' }}"
       required:
         - Port
         - Dockerfile_Path
