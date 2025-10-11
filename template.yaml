@@ -188,8 +188,8 @@ spec:
     links:
       - title: "View on GitHub Pages"
         if: "${{ parameters.deploy_method == 'github pages' }}"
-       # url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
-        url: ${{ steps.github-pages.output.pageUrl }}
+        url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
+        #url: ${{ steps.github-pages.output.pageUrl }}
         icon: "website"
 
 # apiVersion: scaffolder.backstage.io/v1beta3
