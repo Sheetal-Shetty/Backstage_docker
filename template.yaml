@@ -88,7 +88,7 @@ spec:
       name: Enable GitHub Pages
       action: github:pages:enable
       input:
-        repoUrl: github.com?repo=${{ parameters.Github_URL }}&owner=Sheetal-Shetty
+        repoUrl: ${{ parameters.Github_URL }}
         buildType: workflow
         sourceBranch: main
         sourcePath: /
