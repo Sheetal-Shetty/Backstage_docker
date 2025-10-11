@@ -88,7 +88,8 @@ spec:
       name: Enable GitHub Pages
       action: github:pages:enable
       input:
-        repoUrl: github.com?repo=CafeStaticWebsite&owner=Sheetal-Shetty
+        #repoUrl: github.com?repo=CafeStaticWebsite&owner=Sheetal-Shetty
+        repoUrl:
         buildType: workflow
         sourceBranch: main
         sourcePath: /
@@ -187,7 +188,8 @@ spec:
     links:
       - title: "View on GitHub Pages"
         if: "${{ parameters.deploy_method == 'github pages' }}"
-        url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
+       # url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
+        url: ${{ steps.github-pages.output.pageUrl }}
         icon: "website"
 
 # apiVersion: scaffolder.backstage.io/v1beta3
