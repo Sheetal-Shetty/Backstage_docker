@@ -88,7 +88,7 @@ spec:
       name: Enable GitHub Pages
       action: github:pages:enable
       input:
-        repoUrl: github.com?repo=Sheetal-Shetty/CafeStaticWebsite&owner=Sheetal-Shetty
+        repoUrl: github.com?repo=CafeStaticWebsite&owner=Sheetal-Shetty
         buildType: workflow
         sourceBranch: main
         sourcePath: /
