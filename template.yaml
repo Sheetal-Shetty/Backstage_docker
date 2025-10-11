@@ -1,197 +1,3 @@
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: docker-deploy-from-github
-  title: Deploy Docker from GitHub Repo
-  description: Create and deploy a Docker container from a GitHub repository URL.
-spec:
-  owner: user:guest
-  type: service
-
-  
-  parameters:
-    - title: Deployment Method
-      required:
-        - deploy_method
-      properties:
-        deploy_method:
-          title: How do you want to deploy your app?
-          type: string
-          enum:
-            - docker
-            - github pages
-            - kubernetes
-            - baremetal
-          #ui:widget: dropdown
-          #default: docker
-          
-    - title: GitHub Repository URL
-      required: 
-        - Github_URL
-        - Token
-      properties:
-        Github_URL:
-          title: Enter your Github URL
-          type: string
-          description: Enter the github URL where your code exists
-          ui:autofocus: true
-        Token:
-          title: Enter your Github Token
-          type: string
-          description: Enter the GithubToken 
-          ui:autofocus: true
-
-    - title: Container Settings
-      required:
-        - Port
-        - Dockerfile_Path
-      properties:
-        Port:
-          title: Host Port
-          type: string
-          description: Enter the port number to expose (e.g., 8080)
-        Dockerfile_Path:
-          title: Path to Dockerfile
-          type: string
-          description: Relative path to Dockerfile (e.g., `Dockerfile` or `docker/Dockerfile`)
-          default: "Dockerfile"   
-          
-# parameters:
-#   - title: Fill in project details
-#     required:
-#       - name
-#       - description
-#       - owner
-#     properties:
-#       name:
-#         title: Project Name
-#         type: string
-#         description: What’s the name of your project?
-#         ui:autofocus: true
-          
-  steps:
-    - id: fetch-template
-      name: Fetch template files
-      action: fetch:plain
-      input:
-        url: ${{ parameters.Github_URL }}
-        targetPath: .
-    #Previous code throug this template will appear but it will not execute
-    # - id: build_docker
-    #   name: Build Docker Image
-    #   action: shell:run
-    #   input:
-    #     workingDirectory: ${{ steps.clone.output.path }}
-    #     command: |
-    #       docker build -t my-image:latest .
-    - id: github-pages
-      name: Enable GitHub Pages
-      action: github:pages:enable
-      input:
-        #repoUrl: github.com?repo=CafeStaticWebsite&owner=Sheetal-Shetty
-        repoUrl:
-        buildType: workflow
-        sourceBranch: main
-        sourcePath: /
-        token: ${{ parameters.Token }}
-      
-    # - id: deploy_github_pages
-    #   name: Deploy to GitHub Pages
-    #   if: "${{ parameters.deploy_method == 'github pages' }}"
-    #   action: shell:run
-    #   input:
-    #     cwd: ${{ steps.fetch-template.output.path }}
-    #     command: sh
-    #     args:
-    #       - -c
-    #       - |
-    #         echo "🛠️ Building and deploying to GitHub Pages..."
-
-    #         git config --global user.email "sheetalshetty9845@gmail.com"
-    #         git config --global user.name "Sheetal-Shetty"
-
-    #         if [ -f package.json ]; then
-    #           echo "📦 Installing dependencies..."
-    #           npx npm install || echo "⚠️ npm install failed or skipped"
-
-    #           if grep -q "\"build\"" package.json 2>/dev/null; then
-    #             echo "🏗️ Running build..."
-    #             npx npm run build || echo "⚠️ build failed, continuing..."
-    #           fi
-    #         else
-    #           echo "⚠️ No package.json found, skipping npm steps"
-    #         fi
-
-    #         echo "🚀 Deploying to GitHub Pages..."
-    #         npx gh-pages -d . -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
-    # - id: deploy_github_pages
-    #   name: Deploy to GitHub Pages
-    #   if: "${{ parameters.deploy_method == 'github pages' }}"
-    #   action: shell:run
-    #   input:
-    #     cwd: ${{ steps.fetch-template.output.path }}
-    #     command: bash
-    #     args:
-    #       - -c
-    #       - |
-    #         echo "🛠️ Building and deploying to GitHub Pages..."
-    #         git config --global user.email "sheetalshetty9845@gmail.com"
-    #         git config --global user.name "Sheetal-Shetty"
-    #         npm install
-    #         npm run build
-    #         npm install -g gh-pages
-    #         npx gh-pages -d build -m "Deployed via Backstage"
-    
-
-    
-    # - id: build_docker
-    #   name: Build Docker Image
-    #   action: shell:run
-    #   input:
-    #     cwd: ${{ steps.fetch-template.output.path }}
-    #     command: docker 
-    #     args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
-
-
-    # - id: cleanup
-    #   name: Remove old container if exists
-    #   action: shell:run
-    #   input:
-    #     command: docker
-    #     args: ["rm", "-f", "Cafe-container"]
-                
-
-    # - id: deploy_docker
-    #   name: Deploy Docker Container
-    #   action: shell:run
-    #   input:
-    #     cwd: ${{ steps.fetch-template.output.path }}
-    #     command: docker
-    #     args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
-
-        
-
-    # - id: run-echo
-    #   name: Echo Test
-    #   action: shell:run
-    #   input:
-    #     command: echo
-    #     args: ["Hello Backstage!"]
-  # output:
-  #   links:
-  #     - title: "Open Website"
-  #       url: "http://localhost:89"
-  #       icon: "website"
-
-
-  output:
-    links:
-      - title: "View on GitHub Pages"
-        if: "${{ parameters.deploy_method == 'github pages' }}"
-        url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
-        #url: ${{ steps.github-pages.output.pageUrl }}
-        icon: "website"
-
 # apiVersion: scaffolder.backstage.io/v1beta3
 # kind: Template
 # metadata:
@@ -222,11 +28,17 @@ spec:
 #     - title: GitHub Repository URL
 #       required: 
 #         - Github_URL
+#         - Token
 #       properties:
 #         Github_URL:
-#           title: Enter you Github URL
+#           title: Enter your Github URL
 #           type: string
 #           description: Enter the github URL where your code exists
+#           ui:autofocus: true
+#         Token:
+#           title: Enter your Github Token
+#           type: string
+#           description: Enter the GithubToken 
 #           ui:autofocus: true
 
 #     - title: Container Settings
@@ -272,31 +84,90 @@ spec:
 #     #     workingDirectory: ${{ steps.clone.output.path }}
 #     #     command: |
 #     #       docker build -t my-image:latest .
-
-#     - id: build_docker
-#       name: Build Docker Image
-#       action: shell:run
+#     - id: github-pages
+#       name: Enable GitHub Pages
+#       action: github:pages:enable
 #       input:
-#         cwd: ${{ steps.fetch-template.output.path }}
-#         command: docker 
-#         args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
+#         #repoUrl: github.com?repo=CafeStaticWebsite&owner=Sheetal-Shetty
+#         repoUrl:
+#         buildType: workflow
+#         sourceBranch: main
+#         sourcePath: /
+#         token: ${{ parameters.Token }}
+      
+#     # - id: deploy_github_pages
+#     #   name: Deploy to GitHub Pages
+#     #   if: "${{ parameters.deploy_method == 'github pages' }}"
+#     #   action: shell:run
+#     #   input:
+#     #     cwd: ${{ steps.fetch-template.output.path }}
+#     #     command: sh
+#     #     args:
+#     #       - -c
+#     #       - |
+#     #         echo "🛠️ Building and deploying to GitHub Pages..."
+
+#     #         git config --global user.email "sheetalshetty9845@gmail.com"
+#     #         git config --global user.name "Sheetal-Shetty"
+
+#     #         if [ -f package.json ]; then
+#     #           echo "📦 Installing dependencies..."
+#     #           npx npm install || echo "⚠️ npm install failed or skipped"
+
+#     #           if grep -q "\"build\"" package.json 2>/dev/null; then
+#     #             echo "🏗️ Running build..."
+#     #             npx npm run build || echo "⚠️ build failed, continuing..."
+#     #           fi
+#     #         else
+#     #           echo "⚠️ No package.json found, skipping npm steps"
+#     #         fi
+
+#     #         echo "🚀 Deploying to GitHub Pages..."
+#     #         npx gh-pages -d . -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
+#     # - id: deploy_github_pages
+#     #   name: Deploy to GitHub Pages
+#     #   if: "${{ parameters.deploy_method == 'github pages' }}"
+#     #   action: shell:run
+#     #   input:
+#     #     cwd: ${{ steps.fetch-template.output.path }}
+#     #     command: bash
+#     #     args:
+#     #       - -c
+#     #       - |
+#     #         echo "🛠️ Building and deploying to GitHub Pages..."
+#     #         git config --global user.email "sheetalshetty9845@gmail.com"
+#     #         git config --global user.name "Sheetal-Shetty"
+#     #         npm install
+#     #         npm run build
+#     #         npm install -g gh-pages
+#     #         npx gh-pages -d build -m "Deployed via Backstage"
+    
+
+    
+#     # - id: build_docker
+#     #   name: Build Docker Image
+#     #   action: shell:run
+#     #   input:
+#     #     cwd: ${{ steps.fetch-template.output.path }}
+#     #     command: docker 
+#     #     args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
 
 
-#     - id: cleanup
-#       name: Remove old container if exists
-#       action: shell:run
-#       input:
-#         command: docker
-#         args: ["rm", "-f", "Cafe-container"]
+#     # - id: cleanup
+#     #   name: Remove old container if exists
+#     #   action: shell:run
+#     #   input:
+#     #     command: docker
+#     #     args: ["rm", "-f", "Cafe-container"]
                 
 
-#     - id: deploy_docker
-#       name: Deploy Docker Container
-#       action: shell:run
-#       input:
-#         cwd: ${{ steps.fetch-template.output.path }}
-#         command: docker
-#         args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
+#     # - id: deploy_docker
+#     #   name: Deploy Docker Container
+#     #   action: shell:run
+#     #   input:
+#     #     cwd: ${{ steps.fetch-template.output.path }}
+#     #     command: docker
+#     #     args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
 
         
 
@@ -306,8 +177,137 @@ spec:
 #     #   input:
 #     #     command: echo
 #     #     args: ["Hello Backstage!"]
-#   output:
-#     links:
-#       - title: "Open Website"
-#         url: "http://localhost:89"
-#         icon: "website"
+#   # output:
+#   #   links:
+#   #     - title: "Open Website"
+#   #       url: "http://localhost:89"
+#   #       icon: "website"
+
+
+  # output:
+  #   links:
+  #     - title: "View on GitHub Pages"
+  #       if: "${{ parameters.deploy_method == 'github pages' }}"
+  #       url: "https://${{ parameters.Github_URL | replace('https://github.com/', '') | replace('.git', '') | replace('/', '.github.io/') }}/"
+  #       #url: ${{ steps.github-pages.output.pageUrl }}
+  #       icon: "website"
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: docker-deploy-from-github
+  title: Deploy Docker from GitHub Repo
+  description: Create and deploy a Docker container from a GitHub repository URL.
+spec:
+  owner: user:guest
+  type: service
+
+  
+  parameters:
+    - title: Deployment Method
+      required:
+        - deploy_method
+      properties:
+        deploy_method:
+          title: How do you want to deploy your app?
+          type: string
+          enum:
+            - docker
+            - github pages
+            - kubernetes
+            - baremetal
+          #ui:widget: dropdown
+          #default: docker
+          
+    - title: GitHub Repository URL
+      required: 
+        - Github_URL
+      properties:
+        Github_URL:
+          title: Enter you Github URL
+          type: string
+          description: Enter the github URL where your code exists
+          ui:autofocus: true
+
+    - title: Container Settings
+      required:
+        - Port
+        - Dockerfile_Path
+      properties:
+        Port:
+          title: Host Port
+          type: string
+          description: Enter the port number to expose (e.g., 8080)
+        Dockerfile_Path:
+          title: Path to Dockerfile
+          type: string
+          description: Relative path to Dockerfile (e.g., `Dockerfile` or `docker/Dockerfile`)
+          default: "Dockerfile"   
+          
+# parameters:
+#   - title: Fill in project details
+#     required:
+#       - name
+#       - description
+#       - owner
+#     properties:
+#       name:
+#         title: Project Name
+#         type: string
+#         description: What’s the name of your project?
+#         ui:autofocus: true
+          
+  steps:
+    - id: fetch-template
+      name: Fetch template files
+      action: fetch:plain
+      input:
+        url: ${{ parameters.Github_URL }}
+        targetPath: .
+    #Previous code throug this template will appear but it will not execute
+    # - id: build_docker
+    #   name: Build Docker Image
+    #   action: shell:run
+    #   input:
+    #     workingDirectory: ${{ steps.clone.output.path }}
+    #     command: |
+    #       docker build -t my-image:latest .
+
+    - id: build_docker
+      name: Build Docker Image
+      action: shell:run
+      input:
+        cwd: ${{ steps.fetch-template.output.path }}
+        command: docker 
+        args: ["build", ".", "-f", "${{ parameters.Dockerfile_Path }}", "-t", "my-image:latest"]
+
+
+    - id: cleanup
+      name: Remove old container if exists
+      action: shell:run
+      input:
+        command: docker
+        args: ["rm", "-f", "Cafe-container"]
+                
+
+    - id: deploy_docker
+      name: Deploy Docker Container
+      action: shell:run
+      input:
+        cwd: ${{ steps.fetch-template.output.path }}
+        command: docker
+        args: ["run", "--name", "Cafe-container", "-it", "-d", "-p", "89:${{ parameters.Port }}", "my-image:latest"]
+
+        
+
+    # - id: run-echo
+    #   name: Echo Test
+    #   action: shell:run
+    #   input:
+    #     command: echo
+    #     args: ["Hello Backstage!"]
+  output:
+    links:
+      - title: "Open Website"
+        url: "http://localhost:89"
+        icon: "website"
