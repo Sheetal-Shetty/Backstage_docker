@@ -86,7 +86,7 @@ spec:
     #       docker build -t my-image:latest .
     - id: github-pages
       name: Enable GitHub Pages
-      action: github:pages
+      action: github:pages:enable
       input:
         repoUrl: github.com?repo=${{ parameters.Github_URL }}&owner=Sheetal-Shetty
         buildType: workflow
