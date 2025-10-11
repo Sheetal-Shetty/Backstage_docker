@@ -28,11 +28,17 @@ spec:
     - title: GitHub Repository URL
       required: 
         - Github_URL
+        - Token
       properties:
         Github_URL:
-          title: Enter you Github URL
+          title: Enter your Github URL
           type: string
           description: Enter the github URL where your code exists
+          ui:autofocus: true
+        Token:
+          title: Enter your Github Token
+          type: string
+          description: Enter the GithubToken 
           ui:autofocus: true
 
     - title: Container Settings
@@ -78,36 +84,45 @@ spec:
     #     workingDirectory: ${{ steps.clone.output.path }}
     #     command: |
     #       docker build -t my-image:latest .
-
-    - id: deploy_github_pages
-      name: Deploy to GitHub Pages
-      if: "${{ parameters.deploy_method == 'github pages' }}"
-      action: shell:run
+    - id: github-pages
+      name: Enable GitHub Pages
+      action: github:pages
       input:
-        cwd: ${{ steps.fetch-template.output.path }}
-        command: sh
-        args:
-          - -c
-          - |
-            echo "🛠️ Building and deploying to GitHub Pages..."
+        repoUrl: github.com?repo=${{ parameters.Github_URL }}&owner=Sheetal-Shetty
+        buildType: workflow
+        sourceBranch: main
+        sourcePath: /
+        token: ${{ parameters.Token }}
+      
+    # - id: deploy_github_pages
+    #   name: Deploy to GitHub Pages
+    #   if: "${{ parameters.deploy_method == 'github pages' }}"
+    #   action: shell:run
+    #   input:
+    #     cwd: ${{ steps.fetch-template.output.path }}
+    #     command: sh
+    #     args:
+    #       - -c
+    #       - |
+    #         echo "🛠️ Building and deploying to GitHub Pages..."
 
-            git config --global user.email "sheetalshetty9845@gmail.com"
-            git config --global user.name "Sheetal-Shetty"
+    #         git config --global user.email "sheetalshetty9845@gmail.com"
+    #         git config --global user.name "Sheetal-Shetty"
 
-            if [ -f package.json ]; then
-              echo "📦 Installing dependencies..."
-              npx npm install || echo "⚠️ npm install failed or skipped"
+    #         if [ -f package.json ]; then
+    #           echo "📦 Installing dependencies..."
+    #           npx npm install || echo "⚠️ npm install failed or skipped"
 
-              if grep -q "\"build\"" package.json 2>/dev/null; then
-                echo "🏗️ Running build..."
-                npx npm run build || echo "⚠️ build failed, continuing..."
-              fi
-            else
-              echo "⚠️ No package.json found, skipping npm steps"
-            fi
+    #           if grep -q "\"build\"" package.json 2>/dev/null; then
+    #             echo "🏗️ Running build..."
+    #             npx npm run build || echo "⚠️ build failed, continuing..."
+    #           fi
+    #         else
+    #           echo "⚠️ No package.json found, skipping npm steps"
+    #         fi
 
-            echo "🚀 Deploying to GitHub Pages..."
-            npx gh-pages -d . -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
+    #         echo "🚀 Deploying to GitHub Pages..."
+    #         npx gh-pages -d . -m "Deployed via Backstage" || echo "⚠️ Deployment failed, please check gh-pages setup"
     # - id: deploy_github_pages
     #   name: Deploy to GitHub Pages
     #   if: "${{ parameters.deploy_method == 'github pages' }}"
